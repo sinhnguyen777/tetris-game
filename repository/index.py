@@ -1,1 +1,1 @@
-from tetris_repository import TetrisRepository
+from tetris_repository import *
