@@ -1,12 +1,76 @@
+import numpy as np
+import pygame as py
+import sys, os
+
+sys.path.append(os.path.abspath(os.path.join("constants")))
+
+import constants as cs
+
+
 class Grid:
-    def __init__(self, rows=20, cols=10):
-        self.rows = rows
-        self.cols = cols
-        self.grid = [[0 for _ in range(cols)] for _ in range(rows)]
+    def __init__(self):
+        self.num_cols = 10
+        self.num_rows = 23
+        self.cell_size = 30
+        self.line_clears = 0
+        self.grid = np.zeros((self.num_rows, self.num_cols), dtype=int)
+        self.colors = cs.Colors.get_color()
+
+    def print_grid(self):
+        for row in range(self.num_rows):
+            for col in range(self.num_cols):
+                print(self.grid[row][col], end=" ")
+            print()
+
+    def is_game_over(self, row):
+        for col in range(self.num_cols):
+            if self.grid[row][col] != 0:
+                return True
+        return False
+
+    def is_inside(self, row, col):
+        if row >= 0 and row < self.num_rows and col >= 0 and col < self.num_cols:
+            return True
+        return False
+
+    def is_cells_empty(self, row, col):
+        if self.grid[row][col] == 0:
+            return True
+        return False
 
     def is_row_full(self, row):
-        return all(cell != 0 for cell in self.grid[row])
+        for col in range(self.num_cols):
+            if self.grid[row][col] == 0:
+                return False
+        return True
 
     def clear_row(self, row):
-        del self.grid[row]
-        self.grid.insert(0, [0 for _ in range(self.cols)])
+        for col in range(self.num_cols):
+            self.grid[row][col] = 0
+
+    def move_row_down(self, row, num_rows):
+        for col in range(self.num_cols):
+            self.grid[row + num_rows][col] = self.grid[row][col]
+            self.grid[row][col] = 0
+
+    def clear_full_row(self):
+        completed = 0
+        for row in range(self.num_rows - 1, 0, -1):
+            if self.is_row_full(row):
+                self.clear_row(row)
+                completed += 1
+            elif completed > 0:
+                self.move_row_down(row, completed)
+        return completed
+
+    def draw(self, screen):
+        for row in range(self.num_rows - 3):
+            for col in range(self.num_cols):
+                cell_value = self.grid[row + 3][col]
+                cell_rect = py.Rect(
+                    col * self.cell_size,
+                    row * self.cell_size,
+                    self.cell_size - 1,
+                    self.cell_size - 1,
+                )
+                py.draw.rect(screen, self.colors[cell_value], cell_rect)
