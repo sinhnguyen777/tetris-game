@@ -1,6 +1,6 @@
 import repository as rp
 from core.grid import Grid
-from core.pieces import Pieces
+from core.tetromino import Pieces
 from core.game_logic import GameLogic
 from ui.tetris_ui import TetrisUI
 

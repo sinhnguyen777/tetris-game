@@ -1,5 +1,5 @@
-from .game_logic import GameLogic
+from .game_logic import Game
 from .grid import Grid
-from .pieces import Pieces
+from .tetromino import Tetromino
 
 __all__ = ["GameLogic", "Grid", "Piece"]
