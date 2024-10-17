@@ -1,2 +1,2 @@
-from colors import *
-from spacing import *
+from .colors import *
+from .spacing import *

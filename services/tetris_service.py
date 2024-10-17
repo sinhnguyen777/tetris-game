@@ -1,7 +1,3 @@
-import os, sys
-
-sys.path.append(os.path.abspath(os.path.join("repository")))
-
 import repository as rp
 from core.grid import Grid
 from core.pieces import Pieces
@@ -22,3 +18,9 @@ class TetrisService:
             self.ui.draw_grid(self.grid)
             self.ui.clock.tick(30)
         self.ui.quit()
+
+    def update_game(self):
+        pass
+
+    def render(self, screen):
+        pass
