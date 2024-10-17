@@ -28,19 +28,22 @@ title_font = py.font.Font(None, 40)
 # score_surf = title_font.render("Score", True, (255, 255, 255))
 # score_rect = py.Rect(320, 55, 170, 60)
 
+hold_surf = title_font.render("Hold", True, (255, 255, 255))
+hold_rect = py.Rect(10, 55, 170, 170)
+
 lines_clear_surf = title_font.render("Lines Clear", True, (255, 255, 255))
-lines_clear_rect = py.Rect(320, 55, 170, 60)
+lines_clear_rect = py.Rect(520, 55, 170, 60)
 
 next_surf = title_font.render("Next", True, (255, 255, 255))
-next_rect = py.Rect(320, 165, 170, 485)
+next_rect = py.Rect(520, 165, 170, 485)
 
 py.display.set_caption("Tetris")
 
-size = (500, 700)
+size = (700, 700)
 screen = py.display.set_mode(size)
 background_surf = py.Surface((300, 600))
 background_surf.fill((26, 31, 40))
-draw_surf = py.Surface((500, 700))
+draw_surf = py.Surface((700, 700))
 draw_surf.fill(py.Color("#C77DFF"))
 draw_surf2 = py.Surface((300, 600), py.SRCALPHA)
 draw_surf2.fill(py.Color("#505050"))
@@ -92,6 +95,8 @@ while True:
                 last_direction_pressed = py.K_RIGHT
                 reset_das_status()
                 move_tetromino_right()
+            if ev.key == py.K_d:
+                game.set_hold_tetromino()
             if ev.key == py.K_UP:
                 game.rotate_cw()
             elif ev.key == py.K_a:
@@ -158,8 +163,8 @@ while True:
     game.draw(draw_surf2)
 
     screen.blit(draw_surf, (0, 0))
-    screen.blit(background_surf, (10, 50))
-    screen.blit(draw_surf2, (10, 50))
+    screen.blit(background_surf, (200, 50))
+    screen.blit(draw_surf2, (200, 50))
 
     # screen.blit(score_surf, (365, 20, 50, 50))
     # py.draw.rect(draw_surf, "#aa77d1", score_rect, 0, 10)
@@ -169,7 +174,18 @@ while True:
     #     score_value.get_rect(centerx=score_rect.centerx, centery=score_rect.centery),
     # )
 
-    screen.blit(lines_clear_surf, (330, 20, 50, 50))
+    screen.blit(
+        hold_surf,
+        hold_surf.get_rect(
+            centerx=hold_rect.centerx,
+            centery=hold_rect.centery
+            - hold_rect.size[1] / 2
+            - hold_surf.get_height() / 2,
+        ),
+    )
+    py.draw.rect(draw_surf, "#aa77d1", hold_rect, 0, 10)
+    game.draw_hold_tetromino(draw_surf)
+
     py.draw.rect(draw_surf, "#aa77d1", lines_clear_rect, 0, 10)
     line_clears_value = title_font.render(str(game.line_clears), True, (255, 255, 255))
     screen.blit(
@@ -179,7 +195,15 @@ while True:
         ),
     )
 
-    screen.blit(next_surf, (365, 130, 50, 50))
+    screen.blit(
+        next_surf,
+        next_surf.get_rect(
+            centerx=next_rect.centerx,
+            centery=next_rect.centery
+            - next_rect.size[1] / 2
+            - next_surf.get_height() / 2,
+        ),
+    )
     py.draw.rect(draw_surf, "#aa77d1", next_rect, 0, 10)
     game.draw_current_queue(draw_surf)
     # game.draw_next_block(draw_surf)
