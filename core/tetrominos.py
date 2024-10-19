@@ -11,7 +11,7 @@ class LTetromino(Tetromino):
             2: [Position(1, 0), Position(1, 1), Position(1, 2), Position(2, 0)],
             3: [Position(0, 0), Position(0, 1), Position(1, 1), Position(2, 1)],
         }
-        self.move(3, 2)
+        self.move(3, 1)
 
 
 class JTetromino(Tetromino):
@@ -23,7 +23,7 @@ class JTetromino(Tetromino):
             2: [Position(1, 0), Position(1, 1), Position(1, 2), Position(2, 2)],
             3: [Position(0, 1), Position(1, 1), Position(2, 0), Position(2, 1)],
         }
-        self.move(3, 2)
+        self.move(3, 1)
 
 
 class ZTetromino(Tetromino):
@@ -35,7 +35,7 @@ class ZTetromino(Tetromino):
             2: [Position(1, 0), Position(1, 1), Position(2, 1), Position(2, 2)],
             3: [Position(0, 1), Position(1, 0), Position(1, 1), Position(2, 0)],
         }
-        self.move(3, 2)
+        self.move(3, 1)
 
 
 class STetromino(Tetromino):
@@ -47,7 +47,7 @@ class STetromino(Tetromino):
             2: [Position(1, 1), Position(1, 2), Position(2, 0), Position(2, 1)],
             3: [Position(0, 0), Position(1, 0), Position(1, 1), Position(2, 1)],
         }
-        self.move(3, 2)
+        self.move(3, 1)
 
 
 class TTetromino(Tetromino):
@@ -59,7 +59,7 @@ class TTetromino(Tetromino):
             2: [Position(1, 0), Position(1, 1), Position(1, 2), Position(2, 1)],
             3: [Position(0, 1), Position(1, 0), Position(1, 1), Position(2, 1)],
         }
-        self.move(3, 2)
+        self.move(3, 1)
 
 
 class OTetromino(Tetromino):
@@ -68,7 +68,7 @@ class OTetromino(Tetromino):
         self.cells = {
             0: [Position(0, 0), Position(0, 1), Position(1, 0), Position(1, 1)]
         }
-        self.move(4, 2)
+        self.move(4, 1)
 
 
 class ITetromino(Tetromino):
@@ -80,4 +80,4 @@ class ITetromino(Tetromino):
             2: [Position(2, 0), Position(2, 1), Position(2, 2), Position(2, 3)],
             3: [Position(0, 1), Position(1, 1), Position(2, 1), Position(3, 1)],
         }
-        self.move(3, 2)
+        self.move(3, 1)
