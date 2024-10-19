@@ -79,3 +79,11 @@ class Three_Zero:
                 4: (-2, -1),
             },
         }
+
+
+class WallKick_180:
+    def __init__(self):
+        self.offset = {
+            "NormalTetromino": {0: BASIC_ROTATION, 1: (0, -1), 2: (1, 0), 3: (-1, 0)},
+            "ITetromino": {0: BASIC_ROTATION, 1: (0, -1), 2: (1, 0), 3: (-1, 0)},
+        }
