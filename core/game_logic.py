@@ -9,10 +9,11 @@ class Game:
         self.grid = Grid()
         self.score = 0
         self.game_over = False
+        self.lockdelay = False
         self.line_clears = 0
         self.das = 65
         self.arr = 0
-        self.soft_drop_speed = 1
+        self.soft_drop_speed = 0
         self.tetrominos = [
             LTetromino(),
             JTetromino(),
@@ -51,6 +52,9 @@ class Game:
         self.current_queue.append(self.next_queue.pop(0))
         if len(self.next_queue) == 0:
             self.next_queue = self.create_tetromino_queue()
+        tetromino.move(0, 1)
+        if not self.tetromino_fits(tetromino):
+            tetromino.move(0, -1)
         return tetromino
 
     def get_random_tetromino(self):
@@ -96,12 +100,6 @@ class Game:
             else:
                 self.hold_tetromino.draw(screen, -50, 135)
 
-    # def draw_next_tetromino(self, screen):
-    #     if self.next_tetromino.id == 6 or self.next_tetromino.id == 7:
-    #         self.next_tetromino.draw(screen, 255, 250)
-    #     else:
-    #         self.next_tetromino.draw(screen, 270, 250)
-
     def draw(self, screen):
         self.grid.draw(screen)
         self.tetromino_ghost().draw_ghost(screen)
@@ -124,41 +122,48 @@ class Game:
     # chưa tối ưu
 
     def move_last_col_left(self):
-        while not self.move_left():
-            break
+        is_not_collision = True
+        while is_not_collision:
+            if self.move_left():
+                is_not_collision = False
 
     def move_last_col_right(self):
-        while not self.move_right():
-            break
+        is_not_collision = True
+        while is_not_collision:
+            if self.move_right():
+                is_not_collision = False
+
+    def is_collision(self):
+        if (
+            self.tetromino_inside(self.current_tetromino) == False
+            or self.tetromino_fits(self.current_tetromino) == False
+        ):
+            return True
+        return False
 
     def move_left(self):
         self.current_tetromino.move(-1, 0)
-        if (
-            self.tetromino_inside(self.current_tetromino) == False
-            or self.tetromino_fits(self.current_tetromino) == False
-        ):
+        if self.is_collision():
             self.current_tetromino.move(1, 0)
             return True
+        return False
 
     def move_right(self):
         self.current_tetromino.move(1, 0)
-        if (
-            self.tetromino_inside(self.current_tetromino) == False
-            or self.tetromino_fits(self.current_tetromino) == False
-        ):
+        if self.is_collision():
             self.current_tetromino.move(-1, 0)
             return True
+        return False
 
     def move_down(self):
         self.current_tetromino.move(0, 1)
-        if (
-            self.tetromino_inside(self.current_tetromino) == False
-            or self.tetromino_fits(self.current_tetromino) == False
-        ):
+        if self.is_collision():
             self.current_tetromino.move(0, -1)
-            self.lock_tetromino()
+            self.lockdelay = True
+            return True
 
     def lock_tetromino(self):
+        self.lockdelay = False
         tiles = self.current_tetromino.get_cell_positions()
         for position in tiles:
             self.grid.grid[position.row][position.col] = self.current_tetromino.id
@@ -201,6 +206,8 @@ class Game:
                 srs_tests = srs.Two_Three()
             elif rotation_state == 3:
                 srs_tests = srs.Three_Zero()
+        elif type == "180deg":
+            srs_tests = srs.WallKick_180()
 
         if self.current_tetromino.id != 7:
             test_offsets = srs_tests.offset["NormalTetromino"]
@@ -209,7 +216,7 @@ class Game:
 
         for tetromino_offset in test_offsets.values():
             block = copy.deepcopy(self.current_tetromino)
-            if type == "cw":
+            if type == "cw" or type == "180deg":
                 block.move(tetromino_offset[0], tetromino_offset[1])
             elif type == "ccw":
                 block.move(-tetromino_offset[0], -tetromino_offset[1])
@@ -222,7 +229,6 @@ class Game:
         rotation_status = self.is_rotate_valid(
             self.current_tetromino.rotation_state, "cw"
         )
-        print(rotation_status)
         if rotation_status != False:
             self.current_tetromino.move(rotation_status[0], rotation_status[1])
         else:
@@ -233,7 +239,6 @@ class Game:
         rotation_status = self.is_rotate_valid(
             self.current_tetromino.rotation_state, "ccw"
         )
-        print(rotation_status)
         if rotation_status != False:
             self.current_tetromino.move(-rotation_status[0], -rotation_status[1])
         else:
@@ -241,6 +246,13 @@ class Game:
 
     def rotate_180(self):
         self.current_tetromino.rotate_180()
+        rotation_status = self.is_rotate_valid(
+            self.current_tetromino.rotation_state, "180deg"
+        )
+        if rotation_status != False:
+            self.current_tetromino.move(rotation_status[0], rotation_status[1])
+        else:
+            self.current_tetromino.rotate_180()
 
     def hard_drop(self):
         self.score += 2 * (
@@ -251,11 +263,14 @@ class Game:
 
     def soft_drop(self):
         self.current_tetromino.move(0, 1)
-        if (
-            self.tetromino_inside(self.current_tetromino) == False
-            or self.tetromino_fits(self.current_tetromino) == False
-        ):
+        if self.is_collision():
             self.current_tetromino.move(0, -1)
-            # self.lock_tetromino()
+            self.lockdelay = True
         else:
             self.score += 1
+
+    def instant_soft_drop(self):
+        self.score += 1 * (
+            self.tetromino_ghost().row_offset - self.current_tetromino.row_offset
+        )
+        self.current_tetromino.row_offset = self.tetromino_ghost().row_offset
