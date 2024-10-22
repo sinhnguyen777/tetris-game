@@ -64,7 +64,8 @@ game_das_active = False
 game_lockdelay_active = False
 key_hold_start_time = 0
 last_direction_pressed = None
-game_are_value = 500
+game_lockdelay_value = 500
+game_lockdelay_reset_count = 0
 
 
 def move_tetromino_left():
@@ -84,7 +85,7 @@ def reset_das_status():
 
 
 def is_touching_ground():
-    global game_lockdelay_active
+    global game_lockdelay_active, game_lockdelay_reset_count
     is_touching = game.move_down()
     if is_touching != True:
         game.current_tetromino.move(0, -1)
@@ -92,7 +93,9 @@ def is_touching_ground():
         game.lockdelay = False
         py.time.set_timer(GAME_LOCKDELAY, 0)
     else:
-        py.time.set_timer(GAME_LOCKDELAY, game_are_value)
+        if game_lockdelay_reset_count <= 15:
+            py.time.set_timer(GAME_LOCKDELAY, game_lockdelay_value)
+            game_lockdelay_reset_count += 1
 
 
 while True:
@@ -129,6 +132,7 @@ while True:
                 py.time.set_timer(GAME_UPDATE, 900)
                 py.time.set_timer(GAME_LOCKDELAY, 0)
                 game_lockdelay_active = False
+                game_lockdelay_reset_count = 0
                 game.hard_drop()
         elif ev.type == py.KEYUP:
             if ev.key == py.K_LEFT and keys[py.K_RIGHT]:
@@ -146,15 +150,14 @@ while True:
         elif ev.type == GAME_LOCKDELAY:
             game.lock_tetromino()
             py.time.set_timer(GAME_LOCKDELAY, 0)
+            game_lockdelay_reset_count = 0
             game_lockdelay_active = False
 
         if game_das_active and ev.type == GAME_ARR:
             if keys[py.K_LEFT] and last_direction_pressed == py.K_LEFT:
                 move_tetromino_left()
-                is_touching_ground()
             if keys[py.K_RIGHT] and last_direction_pressed == py.K_RIGHT:
                 move_tetromino_right()
-                is_touching_ground()
 
     if game.soft_drop_speed == 0 and not ev_game_update_running:
         game.instant_soft_drop()
@@ -162,14 +165,12 @@ while True:
     if game_das_active and game.arr == 0:
         if keys[py.K_LEFT] and last_direction_pressed == py.K_LEFT:
             game.move_last_col_left()
-            is_touching_ground()
         if keys[py.K_RIGHT] and last_direction_pressed == py.K_RIGHT:
             game.move_last_col_right()
-            is_touching_ground()
 
     if game.lockdelay:
         if not game_lockdelay_active:
-            py.time.set_timer(GAME_LOCKDELAY, game_are_value)
+            py.time.set_timer(GAME_LOCKDELAY, game_lockdelay_value)
             game_lockdelay_active = True
 
     if keys[py.K_LEFT] or keys[py.K_RIGHT]:

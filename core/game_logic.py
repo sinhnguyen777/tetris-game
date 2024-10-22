@@ -28,7 +28,6 @@ class Game:
         self.current_tetromino = self.get_current_tetromino()
         self.hold_tetromino = None
         self.is_holding = False
-        # self.next_tetromino = self.get_random_tetromino()
 
     def is_game_over(self):
         for row in range(3):
@@ -274,3 +273,4 @@ class Game:
             self.tetromino_ghost().row_offset - self.current_tetromino.row_offset
         )
         self.current_tetromino.row_offset = self.tetromino_ghost().row_offset
+        self.lockdelay = True
