@@ -1,25 +1,30 @@
-from core.grid import Grid
-from core.tetromino import Pieces
-from core.game_logic import GameLogic
-from ui.tetris_ui import TetrisUI
+import pygame as py
+from constants import GAME_UPDATE, SOFT_DROP
 
 
 class TetrisService:
-    def __init__(self):
-        self.ui = TetrisUI()
-        self.grid = Grid()
-        self.logic = GameLogic(self.grid)
+    def __init__(self, game):
+        self.game = game
+        self.ev_game_update_running = True
 
-    def start_game(self):
-        while self.ui.running:
-            self.ui.handle_events()
-            # Logic game loop
-            self.ui.draw_grid(self.grid)
-            self.ui.clock.tick(30)
-        self.ui.quit()
+    def handle_events(self):
+        for ev in py.event.get():
+            if ev.type == py.QUIT:
+                py.quit()
+                exit()
+            elif ev.type == py.KEYDOWN:
+                if ev.key == py.K_LEFT:
+                    self.game.move_left()
+                elif ev.key == py.K_RIGHT:
+                    self.game.move_right()
+                elif ev.key == py.K_DOWN:
+                    self.ev_game_update_running = False
+                    self.game.move_down()
+                elif ev.key == py.K_SPACE:
+                    self.game.hard_drop()
+            elif ev.type == GAME_UPDATE:
+                if self.ev_game_update_running:
+                    self.game.move_down()
 
-    def update_game(self):
-        pass
-
-    def render(self, screen):
-        pass
+    def update_game_state(self):
+        pass  # Logic to update the game state, e.g., check for game over or line clear

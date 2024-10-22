@@ -1,32 +1,21 @@
-import pygame
-from constants import *
+import pygame as py
+from constants.tetris_constants import BACKGROUND_COLOR
 
 
 class TetrisUI:
-    def __init__(self):
-        pygame.init()
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        pygame.display.set_caption("Tetris v1.0.0")
-        self.clock = pygame.time.Clock()
-        self.running = True
+    def __init__(self, game):
+        self.game = game
+        self.screen = py.display.set_mode((700, 700))
+        self.font = py.font.Font(None, 40)
+        self.background = py.Surface((300, 600))
+        self.background.fill(BACKGROUND_COLOR)
 
-    def draw_grid(self, grid):
-        self.screen.fill(BLACK)
+    def draw_screen(self):
+        self.screen.fill((0, 0, 0))  # Clear the screen
+        self.screen.blit(self.background, (200, 50))
+        self.draw_game_elements()
+        py.display.update()
 
-        for row in range(grid.rows):
-            for col in range(grid.cols):
-                pygame.draw.rect(
-                    self.screen,
-                    WHITE if grid.grid[row][col] else BLACK,
-                    (col * 30, row * 30, 30, 30),
-                    1,
-                )
-        pygame.display.update()
-
-    def handle_events(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.running = False
-
-    def quit(self):
-        pygame.quit()
+    def draw_game_elements(self):
+        # Render hold area, next pieces, grid, etc.
+        pass
