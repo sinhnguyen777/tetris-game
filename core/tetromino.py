@@ -18,7 +18,7 @@ class Tetromino:
         self.colors = cs.Colors.get_color()
         self.ghost_colors = cs.Ghost_Colors.get_color()
 
-    def move(self, row, col):
+    def move(self, col, row):
         self.col_offset += col
         self.row_offset += row
 
@@ -47,12 +47,6 @@ class Tetromino:
             self.rotation_state += 1
             if self.rotation_state == len(self.cells):
                 self.rotation_state = 0
-
-    # undo_rotate chưa hoàn chỉnh
-    def undo_rotate(self):
-        self.rotation_state -= 1
-        if self.rotation_state < 0:
-            self.rotation_state = len(self.cells) - 1
 
     def draw(self, screen, offset_x, offset_y):
         tiles = self.get_cell_positions()
