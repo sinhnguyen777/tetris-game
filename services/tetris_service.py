@@ -1,4 +1,3 @@
-import repository as rp
 from core.grid import Grid
 from core.tetromino import Pieces
 from core.game_logic import GameLogic
