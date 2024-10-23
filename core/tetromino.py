@@ -50,8 +50,8 @@ class Tetromino:
             tile_rect = pygame.Rect(
                 tile.col * self.cell_size + offset_x,
                 (tile.row - 3) * self.cell_size + offset_y,
-                self.cell_size - 1,
-                self.cell_size - 1,
+                self.cell_size,
+                self.cell_size,
             )
             pygame.draw.rect(screen, self.colors[self.id], tile_rect)
 
@@ -61,7 +61,7 @@ class Tetromino:
             tile_rect = pygame.Rect(
                 tile.col * self.cell_size,
                 (tile.row - 3) * self.cell_size,
-                self.cell_size - 1,
-                self.cell_size - 1,
+                self.cell_size,
+                self.cell_size,
             )
             pygame.draw.rect(screen, self.ghost_colors[self.id], tile_rect)

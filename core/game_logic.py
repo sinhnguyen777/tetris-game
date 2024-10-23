@@ -21,8 +21,9 @@ class Game:
         self.game_over = False
         self.lockdelay = False
         self.line_clears = 0
-        self.das = 70
+        self.das = 65
         self.arr = 0
+        self.level = 12
         self.soft_drop_speed = 0
         self.tetrominos = [
             LTetromino(),
@@ -78,7 +79,7 @@ class Game:
     def draw_current_queue(self, screen):
         for i in range(5):
             self.current_queue[i].draw(
-                screen, 455, 230 + (self.current_queue[i].cell_size * 3 * i)
+                screen, 455, 250 + (self.current_queue[i].cell_size * 3 * i)
             )
 
     def set_hold_tetromino(self):
@@ -99,9 +100,9 @@ class Game:
     def draw_hold_tetromino(self, screen):
         if self.hold_tetromino != None:
             if self.hold_tetromino.id == 6 or self.hold_tetromino.id == 7:
-                self.hold_tetromino.draw(screen, -50, 135)
+                self.hold_tetromino.draw(screen, -52, 170)
             else:
-                self.hold_tetromino.draw(screen, -50, 135)
+                self.hold_tetromino.draw(screen, -37, 170)
 
     def draw(self, screen):
         self.grid.draw(screen)
