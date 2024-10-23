@@ -1,5 +1,5 @@
-from tetromino import Tetromino
-from position import Position
+from core.position import Position
+from core.tetromino import Tetromino
 
 
 class LTetromino(Tetromino):

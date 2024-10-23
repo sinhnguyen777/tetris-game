@@ -1,7 +1,17 @@
-from grid import Grid
-from tetrominos import *
-import srs_logic as srs
 import random, copy
+
+from core.grid import Grid
+from core.tetrominos import (
+    JTetromino,
+    LTetromino,
+    STetromino,
+    TTetromino,
+    OTetromino,
+    ZTetromino,
+    ITetromino,
+)
+from core.srs_logic import Zero_One, One_Two, Two_Three, Three_Zero, WallKick_180
+from utils import randomize
 
 
 class Game:
@@ -11,7 +21,7 @@ class Game:
         self.game_over = False
         self.lockdelay = False
         self.line_clears = 0
-        self.das = 65
+        self.das = 70
         self.arr = 0
         self.soft_drop_speed = 0
         self.tetrominos = [
@@ -35,15 +45,9 @@ class Game:
                 return True
         return False
 
-    def randomize(self, arr):
-        for i in range(len(arr) - 1, 0, -1):
-            j = random.randint(0, i)
-            arr[i], arr[j] = arr[j], arr[i]
-        return arr
-
     def create_tetromino_queue(self):
         current_tetromino_queue = copy.deepcopy(self.tetrominos)
-        self.randomize(current_tetromino_queue)
+        randomize(current_tetromino_queue)
         return current_tetromino_queue
 
     def get_current_tetromino(self):
@@ -189,24 +193,24 @@ class Game:
     def is_rotate_valid(self, rotation_state, type):
         if type == "cw":
             if rotation_state == 0:
-                srs_tests = srs.Three_Zero()
+                srs_tests = Three_Zero()
             elif rotation_state == 1:
-                srs_tests = srs.Zero_One()
+                srs_tests = Zero_One()
             elif rotation_state == 2:
-                srs_tests = srs.One_Two()
+                srs_tests = One_Two()
             elif rotation_state == 3:
-                srs_tests = srs.Two_Three()
+                srs_tests = Two_Three()
         elif type == "ccw":
             if rotation_state == 0:
-                srs_tests = srs.Zero_One()
+                srs_tests = Zero_One()
             elif rotation_state == 1:
-                srs_tests = srs.One_Two()
+                srs_tests = One_Two()
             elif rotation_state == 2:
-                srs_tests = srs.Two_Three()
+                srs_tests = Two_Three()
             elif rotation_state == 3:
-                srs_tests = srs.Three_Zero()
+                srs_tests = Three_Zero()
         elif type == "180deg":
-            srs_tests = srs.WallKick_180()
+            srs_tests = WallKick_180()
 
         if self.current_tetromino.id != 7:
             test_offsets = srs_tests.offset["NormalTetromino"]

@@ -1,10 +1,6 @@
-import numpy as np
-import pygame as py
-import sys, os
-
-sys.path.append(os.path.abspath(os.path.join("constants")))
-
-import constants as cs
+import numpy
+import pygame
+from constants import Colors
 
 
 class Grid:
@@ -13,8 +9,8 @@ class Grid:
         self.num_rows = 23
         self.cell_size = 30
         self.line_clears = 0
-        self.grid = np.zeros((self.num_rows, self.num_cols), dtype=int)
-        self.colors = cs.Colors.get_color()
+        self.grid = numpy.zeros((self.num_rows, self.num_cols), dtype=int)
+        self.colors = Colors.get_color()
 
     def print_grid(self):
         for row in range(self.num_rows):
@@ -67,10 +63,10 @@ class Grid:
         for row in range(self.num_rows - 3):
             for col in range(self.num_cols):
                 cell_value = self.grid[row + 3][col]
-                cell_rect = py.Rect(
+                cell_rect = pygame.Rect(
                     col * self.cell_size,
                     row * self.cell_size,
                     self.cell_size - 1,
                     self.cell_size - 1,
                 )
-                py.draw.rect(screen, self.colors[cell_value], cell_rect)
+                pygame.draw.rect(screen, self.colors[cell_value], cell_rect)
