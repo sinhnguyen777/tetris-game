@@ -1,4 +1,5 @@
 import pygame as py
+import pygame_gui
 from constants.tetris_constants import BACKGROUND_COLOR
 
 
