@@ -1,5 +1,4 @@
 import pygame as py
-import sys, os
 
 from constants import *
 
@@ -121,15 +120,31 @@ class TetrisService:
         # Update game state based on soft drop
         self.ev_game_update_running = not self.keys[py.K_DOWN]
 
+    def is_touching_ground(self):
+        """Checks if the tetromino has touched the ground."""
+        is_touching = self.game.move_down()
+        if is_touching != True:
+            self.game.current_tetromino.move(0, -1)
+            self.game_lockdelay_active = False
+            self.game.lockdelay = False
+            py.time.set_timer(GAME_LOCKDELAY, 0)
+        else:
+            if self.game_lockdelay_reset_count <= LOCKDELAY_RESET_COUNT:
+                py.time.set_timer(GAME_LOCKDELAY, self.game_lockdelay_value)
+                self.game_lockdelay_reset_count += 1
+
+    def move_tetromino_left(self):
+        self.game.move_left()
+        py.time.set_timer(GAME_ARR, self.game.arr)
+
+    def move_tetromino_right(self):
+        self.game.move_right()
+        py.time.set_timer(GAME_ARR, self.game.arr)
+
     def reset_das_status(self):
         """Resets DAS (Delayed Auto Shift) status."""
         self.game_das_active = False
         self.key_hold_start_time = 0
-
-    def is_touching_ground(self):
-        """Checks if the tetromino has touched the ground."""
-        if not self.game.move_down():
-            self.game.lock_tetromino()
 
     def update_game_state(self):
 

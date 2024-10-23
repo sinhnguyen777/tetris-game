@@ -11,6 +11,7 @@ from core.tetrominos import (
     ITetromino,
 )
 from core.srs_logic import Zero_One, One_Two, Two_Three, Three_Zero, WallKick_180
+from utils import randomize
 
 
 class Game:
@@ -44,15 +45,9 @@ class Game:
                 return True
         return False
 
-    def randomize(self, arr):
-        for i in range(len(arr) - 1, 0, -1):
-            j = random.randint(0, i)
-            arr[i], arr[j] = arr[j], arr[i]
-        return arr
-
     def create_tetromino_queue(self):
         current_tetromino_queue = copy.deepcopy(self.tetrominos)
-        self.randomize(current_tetromino_queue)
+        randomize(current_tetromino_queue)
         return current_tetromino_queue
 
     def get_current_tetromino(self):
