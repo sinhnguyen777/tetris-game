@@ -1,5 +1,7 @@
 import pygame as py
 
+import math
+
 from constants import *
 
 
@@ -14,9 +16,12 @@ class TetrisService:
         self.game_lockdelay_active = False
         self.game_lockdelay_reset_count = 0
         self.game_lockdelay_value = 500  # For lock delay reset
+        self.game_gravity = math.floor(
+            ((0.8 - ((self.game.level - 1) * 0.007)) ** (self.game.level - 1)) * 1000
+        )
 
         # Initialize custom events
-        py.time.set_timer(GAME_UPDATE, 900)
+        py.time.set_timer(GAME_UPDATE, self.game_gravity)
         py.time.set_timer(SOFT_DROP, self.game.soft_drop_speed)
 
     def handle_events(self):
@@ -150,7 +155,7 @@ class TetrisService:
 
     def perform_hard_drop(self):
         py.time.set_timer(GAME_UPDATE, 0)
-        py.time.set_timer(GAME_UPDATE, 900)
+        py.time.set_timer(GAME_UPDATE, self.game_gravity)
         py.time.set_timer(GAME_LOCKDELAY, 0)
         self.game_lockdelay_active = False
         self.game_lockdelay_reset_count = 0

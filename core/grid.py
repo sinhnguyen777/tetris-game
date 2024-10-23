@@ -69,4 +69,15 @@ class Grid:
                     self.cell_size - 1,
                     self.cell_size - 1,
                 )
+                if cell_value == 0:
+                    cell_border_color = "#505050"
+                else:
+                    cell_border_color = self.colors[cell_value]
+                cell_border_rect = pygame.Rect(
+                    col * self.cell_size,
+                    row * self.cell_size,
+                    self.cell_size,
+                    self.cell_size,
+                )
+                pygame.draw.rect(screen, cell_border_color, cell_border_rect, width=1)
                 pygame.draw.rect(screen, self.colors[cell_value], cell_rect)
