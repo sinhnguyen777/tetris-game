@@ -1,22 +1,22 @@
+import pygame as py
 from core import Game
 from services import TetrisService
 from ui import TetrisUI
-import pygame
 
 
 class TetrisApp:
     def __init__(self):
-        pygame.init()
+        py.init()
         self.game = Game()
         self.ui = TetrisUI(self.game)
-        self.service = TetrisService(self.game)
+        self.service = TetrisService(self.game, self.ui)
 
     def run(self):
-        clock = pygame.time.Clock()
+        clock = py.time.Clock()
         while True:
-            self.service.handle_events()
-            self.service.update_game_state()
             self.ui.draw_screen()
+            self.ui.draw_game_elements()
+            self.service.handle_events()
             clock.tick(60)
 
 
