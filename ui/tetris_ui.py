@@ -107,14 +107,19 @@ class TetrisUI:
         self.screen.blit(settings_text, settings_text.get_rect(center=self.settings_button.center))
         py.display.flip()
 
-    def draw_settings_screen(self, das_value, arr_value, soft_drop_speed, selected_option):
+    def draw_settings_screen(self, das_value, arr_value, soft_drop_speed, selected_option, current_input):
         self.screen.fill(BACKGROUND_COLOR)
         options = ["DAS", "ARR", "Soft Drop Speed"]
         values = [das_value, arr_value, soft_drop_speed]
 
         for i, option in enumerate(options):
+            if i == selected_option and current_input:
+                display_value = current_input
+            else:
+                display_value = str(values[i])
+            
             color = (255, 0, 0) if i == selected_option else (255, 255, 255)
-            option_text = self.title_font.render(f"{option}: {values[i]}", True, color)
+            option_text = self.title_font.render(f"{option}: {display_value}", True, color)
             self.screen.blit(option_text, (200, 200 + i * 100))
 
         py.draw.rect(self.screen, (0, 128, 0), self.save_button)
@@ -126,6 +131,8 @@ class TetrisUI:
         self.screen.blit(back_text, back_text.get_rect(center=self.back_button.center))
 
         py.display.flip()
+
+
 
     def draw_game_over_screen(self):
         self.screen.fill(BACKGROUND_COLOR)

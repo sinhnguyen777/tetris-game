@@ -13,9 +13,11 @@ class TetrisApp:
         self.game_started = False
         self.game_over = False
 
+        # Cài đặt mặc định (sử dụng giá trị từ game ban đầu)
         self.das_value = self.game.das
         self.arr_value = self.game.arr
         self.soft_drop_speed = self.game.soft_drop_speed
+        self.current_input = ""  # Biến để lưu trữ đầu vào từ người dùng
 
     def run(self):
         clock = py.time.Clock()
@@ -59,43 +61,61 @@ class TetrisApp:
         in_settings = True
         selected_option = 0  # 0 = DAS, 1 = ARR, 2 = Soft Drop Speed
 
+        # Lưu trữ các giá trị gốc để khôi phục nếu người dùng không nhấn Enter
+        original_values = [self.das_value, self.arr_value, self.soft_drop_speed]
+
         while in_settings:
-            self.ui.draw_settings_screen(self.das_value, self.arr_value, self.soft_drop_speed, selected_option)
+            # Hiển thị giá trị nhập hiện tại nếu có, nếu không thì hiển thị giá trị hiện tại
+            self.ui.draw_settings_screen(self.das_value, self.arr_value, self.soft_drop_speed, selected_option, self.current_input)
             for event in py.event.get():
                 if event.type == py.QUIT:
                     self.running = False
                     in_settings = False
                 elif event.type == py.KEYDOWN:
                     if event.key == py.K_ESCAPE:
+                        # Khôi phục giá trị gốc nếu người dùng không nhấn Enter để lưu
+                        self.das_value, self.arr_value, self.soft_drop_speed = original_values
                         in_settings = False
                     elif event.key == py.K_DOWN:
+                        # Khôi phục giá trị cũ khi di chuyển sang trường khác nếu chưa nhấn Enter
+                        if self.current_input:
+                            self.current_input = ""  # Reset giá trị nhập
                         selected_option = (selected_option + 1) % 3
                     elif event.key == py.K_UP:
+                        # Khôi phục giá trị cũ khi di chuyển sang trường khác nếu chưa nhấn Enter
+                        if self.current_input:
+                            self.current_input = ""  # Reset giá trị nhập
                         selected_option = (selected_option - 1) % 3
-                    elif event.key == py.K_LEFT:
-                        if selected_option == 0:
-                            self.das_value = max(0, self.das_value - 1)
-                        elif selected_option == 1:
-                            self.arr_value = max(0, self.arr_value - 1)
-                        elif selected_option == 2:
-                            self.soft_drop_speed = max(1, self.soft_drop_speed - 1)
-                    elif event.key == py.K_RIGHT:
-                        if selected_option == 0:
-                            self.das_value += 1
-                        elif selected_option == 1:
-                            self.arr_value += 1
-                        elif selected_option == 2:
-                            self.soft_drop_speed += 1
+                    elif event.key == py.K_BACKSPACE:
+                        self.current_input = self.current_input[:-1]
+                    elif event.key == py.K_RETURN:
+                        # Chỉ lưu giá trị khi nhấn Enter
+                        if self.current_input.isdigit():
+                            value = int(self.current_input)
+                            if selected_option == 0:
+                                self.das_value = value
+                            elif selected_option == 1:
+                                self.arr_value = value
+                            elif selected_option == 2:
+                                self.soft_drop_speed = value
+                            # Cập nhật giá trị gốc với giá trị mới sau khi lưu
+                            original_values = [self.das_value, self.arr_value, self.soft_drop_speed]
+                        self.current_input = ""  # Reset đầu vào sau khi nhập
+                    else:
+                        if event.unicode.isdigit():
+                            self.current_input += event.unicode
                 elif event.type == py.MOUSEBUTTONDOWN:
                     if self.ui.save_button.collidepoint(event.pos):
                         # Cập nhật giá trị trong game và quay lại màn hình chính
                         self.game.update_settings(self.das_value, self.arr_value, self.soft_drop_speed)
                         in_settings = False
                     elif self.ui.back_button.collidepoint(event.pos):
+                        # Khôi phục giá trị gốc nếu người dùng không nhấn Enter để lưu
+                        self.das_value, self.arr_value, self.soft_drop_speed = original_values
                         in_settings = False
 
     def check_game_over(self):
-        if self.game.is_game_over():
+        if self.game.game_over:
             self.game_over = True
 
     def reset_game(self):
