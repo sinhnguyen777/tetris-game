@@ -22,9 +22,9 @@ class Game:
         self.lockdelay = False
         self.line_clears = 0
         self.das = 65
-        self.arr = 0
-        self.level = 12
-        self.soft_drop_speed = 0
+        self.arr = 10
+        self.level = 1
+        self.soft_drop_speed = 30
         self.tetrominos = [
             LTetromino(),
             JTetromino(),
@@ -39,6 +39,11 @@ class Game:
         self.current_tetromino = self.get_current_tetromino()
         self.hold_tetromino = None
         self.is_holding = False
+
+    def update_settings(self, das_value, arr_value, soft_drop_speed):
+        self.das = das_value
+        self.arr = arr_value
+        self.soft_drop_speed = soft_drop_speed
 
     def is_game_over(self):
         for row in range(3):

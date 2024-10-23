@@ -1,12 +1,10 @@
 import pygame as py
-import pygame_gui
 from constants.tetris_constants import BACKGROUND_COLOR
-
 
 class TetrisUI:
     def __init__(self, game):
-
         self.title_font = py.font.Font(None, 40)
+        self.large_font = py.font.Font(None, 80)
 
         self.hold_surf = self.title_font.render("Hold", True, (255, 255, 255))
         self.hold_rect = py.Rect(10, 55, 170, 170)
@@ -27,6 +25,12 @@ class TetrisUI:
         self.draw_surf2 = py.Surface((300, 600), py.SRCALPHA)
         self.draw_surf2.fill(py.Color("#505050"))
         self.game = game
+
+        self.start_button = py.Rect(200, 300, 300, 50)
+        self.exit_button = py.Rect(200, 500, 300, 50)
+        self.settings_button = py.Rect(200, 400, 300, 50)
+        self.save_button = py.Rect(200, 500, 300, 50)
+        self.back_button = py.Rect(200, 600, 300, 50)
 
     def draw_screen(self):
         self.screen.blit(self.draw_surf, (0, 0))
@@ -75,4 +79,65 @@ class TetrisUI:
         py.display.update()
 
     def draw_game_elements(self):
-        self.game.draw(self.draw_surf2)
+        self.game.draw(self.draw_surf2) 
+        py.display.update()
+
+    def draw_button(self, text, rect, color):
+        py.draw.rect(self.screen, color, rect, 0, 5)
+        button_text = self.title_font.render(text, True, (255, 255, 255))
+        self.screen.blit(
+            button_text,
+            button_text.get_rect(center=(rect.centerx, rect.centery))
+        )
+        return rect
+
+    def draw_start_screen(self):
+        self.screen.fill(BACKGROUND_COLOR)
+        py.draw.rect(self.screen, (0, 128, 255), self.start_button)
+        py.draw.rect(self.screen, (0, 128, 255), self.exit_button)
+        py.draw.rect(self.screen, (0, 128, 255), self.settings_button)
+
+        start_text = self.title_font.render("Start Game", True, (255, 255, 255))
+        self.screen.blit(start_text, start_text.get_rect(center=self.start_button.center))
+        
+        exit_text = self.title_font.render("Exit", True, (255, 255, 255))
+        self.screen.blit(exit_text, exit_text.get_rect(center=self.exit_button.center))
+        
+        settings_text = self.title_font.render("Settings", True, (255, 255, 255))
+        self.screen.blit(settings_text, settings_text.get_rect(center=self.settings_button.center))
+        py.display.flip()
+
+    def draw_settings_screen(self, das_value, arr_value, soft_drop_speed, selected_option):
+        self.screen.fill(BACKGROUND_COLOR)
+        options = ["DAS", "ARR", "Soft Drop Speed"]
+        values = [das_value, arr_value, soft_drop_speed]
+
+        for i, option in enumerate(options):
+            color = (255, 0, 0) if i == selected_option else (255, 255, 255)
+            option_text = self.title_font.render(f"{option}: {values[i]}", True, color)
+            self.screen.blit(option_text, (200, 200 + i * 100))
+
+        py.draw.rect(self.screen, (0, 128, 0), self.save_button)
+        py.draw.rect(self.screen, (128, 0, 0), self.back_button)
+
+        save_text = self.title_font.render("Save", True, (255, 255, 255))
+        self.screen.blit(save_text, save_text.get_rect(center=self.save_button.center))
+        back_text = self.title_font.render("Back", True, (255, 255, 255))
+        self.screen.blit(back_text, back_text.get_rect(center=self.back_button.center))
+
+        py.display.flip()
+
+    def draw_game_over_screen(self):
+        self.screen.fill(BACKGROUND_COLOR)
+        game_over_surf = self.large_font.render("GAME OVER", True, (255, 0, 0))
+        self.screen.blit(
+            game_over_surf,
+            game_over_surf.get_rect(center=(self.screen.get_width() // 2, 200))
+        )
+
+        restart_button_rect = py.Rect(250, 350, 200, 50)
+        exit_button_rect = py.Rect(250, 420, 200, 50)
+        self.restart_button = self.draw_button("Restart", restart_button_rect, "#4CAF50")
+        self.exit_button = self.draw_button("Exit", exit_button_rect, "#F44336")
+
+        py.display.update()
