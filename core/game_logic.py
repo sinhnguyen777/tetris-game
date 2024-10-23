@@ -21,7 +21,7 @@ class Game:
         self.game_over = False
         self.lockdelay = False
         self.line_clears = 0
-        self.das = 65
+        self.das = 70
         self.arr = 0
         self.soft_drop_speed = 0
         self.tetrominos = [
