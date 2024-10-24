@@ -184,6 +184,8 @@ class Game:
         rows_cleared = self.grid.clear_full_row()
         self.line_clears += rows_cleared
 
+        self.update_score(rows_cleared)
+
         return rows_cleared
 
     def tetromino_inside(self, tetromino):
@@ -288,17 +290,6 @@ class Game:
         )
         self.current_tetromino.row_offset = self.tetromino_ghost().row_offset
         self.lockdelay = True
-
-    def lock_tetromino_and_update(self):
-        """Khi tetromino khóa lại, kiểm tra và cập nhật điểm nếu phá vỡ hàng."""
-        # Khóa tetromino lại vào lưới
-        self.lock_tetromino()
-
-        # Kiểm tra số hàng đã bị xóa
-        rows_cleared = self.grid.clear_full_row()
-
-        # Tính điểm dựa trên số hàng bị xóa
-        self.update_score(rows_cleared)
 
     def update_score(self, rows_cleared):
         """Tính điểm dựa trên số hàng đã xóa."""

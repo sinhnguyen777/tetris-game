@@ -15,7 +15,7 @@ class TetrisUI:
         )
 
         self.score_surf = self.title_font.render("Score", True, (255, 255, 255))
-        self.score_rect = py.Rect(10, 270, 170, 170)
+        self.score_rect = py.Rect(10, 270, 170, 60)
 
         self.lines_clear_rect = py.Rect(520, 55, 170, 60)
         self.next_surf = self.title_font.render("Next", True, (255, 255, 255))
@@ -81,7 +81,18 @@ class TetrisUI:
         )
 
         py.draw.rect(self.draw_surf, "#aa77d1", self.score_rect, 0, 10)
-        self.game.lock_tetromino_and_update(self.draw_surf)
+
+        score_value = self.title_font.render(
+            str(self.game.score), True, (255, 255, 255)
+        )
+
+        self.screen.blit(
+            score_value,
+            score_value.get_rect(
+                centerx=self.score_rect.centerx,
+                centery=self.score_rect.centery,
+            ),
+        )
 
         # Lines cleared section
         self.screen.blit(
