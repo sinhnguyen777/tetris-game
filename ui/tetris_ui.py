@@ -81,7 +81,7 @@ class TetrisUI:
             ),
         )
 
-        py.draw.rect(self.draw_surf, "#aa77d1", self.score_rect, 0, 10)
+        py.draw.rect(self.game_surf, "#aa77d1", self.score_rect, 0, 10)
         score_value = self.title_font.render(
             str(self.game.score), True, (255, 255, 255)
         )
@@ -165,7 +165,13 @@ class TetrisUI:
         py.display.flip()
 
     def draw_settings_screen(
-        self, das_value, arr_value, soft_drop_speed, level, selected_option, current_input
+        self,
+        das_value,
+        arr_value,
+        soft_drop_speed,
+        level,
+        selected_option,
+        current_input,
     ):
         self.screen.fill(BACKGROUND_COLOR)
         options = ["DAS", "ARR", "Soft Drop Speed", "Level"]
