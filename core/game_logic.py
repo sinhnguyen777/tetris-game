@@ -179,8 +179,13 @@ class Game:
         self.current_tetromino = self.get_current_tetromino()
         if self.is_holding:
             self.is_holding = False
-        self.line_clears += self.grid.clear_full_row()
+
         self.game_over = self.is_game_over()
+        rows_cleared = self.grid.clear_full_row()
+        self.line_clears += rows_cleared
+
+        self.update_score(rows_cleared)
+        return rows_cleared
 
     def tetromino_inside(self, tetromino):
         tiles = tetromino.get_cell_positions()
@@ -284,3 +289,15 @@ class Game:
         )
         self.current_tetromino.row_offset = self.tetromino_ghost().row_offset
         self.lockdelay = True
+
+    def update_score(self, rows_cleared):
+        """Tính điểm dựa trên số hàng đã xóa."""
+        if rows_cleared == 1:
+            self.score += 100
+        elif rows_cleared == 2:
+            self.score += 300
+        elif rows_cleared == 3:
+            self.score += 500
+        elif rows_cleared == 4:
+            self.score += 800
+        print(f"Score: {self.score}")

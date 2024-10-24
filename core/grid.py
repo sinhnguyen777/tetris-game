@@ -50,14 +50,14 @@ class Grid:
             self.grid[row][col] = 0
 
     def clear_full_row(self):
-        completed = 0
+        rows_cleared = 0
         for row in range(self.num_rows - 1, 0, -1):
             if self.is_row_full(row):
                 self.clear_row(row)
-                completed += 1
-            elif completed > 0:
-                self.move_row_down(row, completed)
-        return completed
+                rows_cleared += 1
+            elif rows_cleared > 0:
+                self.move_row_down(row, rows_cleared)
+        return rows_cleared
 
     def draw(self, screen):
         for row in range(self.num_rows - 3):

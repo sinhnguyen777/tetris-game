@@ -1,12 +1,13 @@
 import pygame as py
-
 import math
 
 from constants import *
+from core import Game
+from ui import TetrisUI
 
 
 class TetrisService:
-    def __init__(self, game, ui):
+    def __init__(self, game: Game, ui: TetrisUI):
         self.game = game
         self.ui = ui
         self.game_paused = False
