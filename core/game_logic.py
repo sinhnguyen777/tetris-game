@@ -294,11 +294,10 @@ class Game:
     def update_score(self, rows_cleared):
         """Tính điểm dựa trên số hàng đã xóa."""
         if rows_cleared == 1:
-            self.score += 100
+            self.score += 100 * self.level
         elif rows_cleared == 2:
-            self.score += 300
+            self.score += 300 * self.level
         elif rows_cleared == 3:
-            self.score += 500
+            self.score += 500 * self.level
         elif rows_cleared == 4:
-            self.score += 800
-        print(f"Score: {self.score}")
+            self.score += 800 * self.level
