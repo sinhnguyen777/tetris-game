@@ -40,10 +40,11 @@ class Game:
         self.hold_tetromino = None
         self.is_holding = False
 
-    def update_settings(self, das_value, arr_value, soft_drop_speed):
+    def update_settings(self, das_value, arr_value, soft_drop_speed, level):
         self.das = das_value
         self.arr = arr_value
         self.soft_drop_speed = soft_drop_speed
+        self.level = level
 
     def is_game_over(self):
         for row in range(3):

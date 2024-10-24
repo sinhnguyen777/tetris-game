@@ -21,6 +21,7 @@ class TetrisApp:
         self.das_value = self.game.das
         self.arr_value = self.game.arr
         self.soft_drop_speed = self.game.soft_drop_speed
+        self.level = self.game.level
         self.current_input = ""  # Biến để lưu trữ đầu vào từ người dùng
 
     def run(self):
@@ -41,10 +42,9 @@ class TetrisApp:
                 if self.is_countdown:
                     self.ui.draw_countdown_screen(self.countdown_value)
                     self.handle_countdown()
-                    py.display.update()
                 else:
                     self.service.handle_events()
-                    py.display.update()
+                py.display.update()
                 self.check_game_over()
             clock.tick(60)
 
@@ -100,17 +100,15 @@ class TetrisApp:
 
     def open_settings_screen(self):
         in_settings = True
-        selected_option = 0  # 0 = DAS, 1 = ARR, 2 = Soft Drop Speed
-
-        # Lưu trữ các giá trị gốc để khôi phục nếu người dùng không nhấn Enter
-        original_values = [self.das_value, self.arr_value, self.soft_drop_speed]
+        selected_option = 0  
+        original_values = [self.das_value, self.arr_value, self.soft_drop_speed, self.level]
 
         while in_settings:
-            # Hiển thị giá trị nhập hiện tại nếu có, nếu không thì hiển thị giá trị hiện tại
             self.ui.draw_settings_screen(
                 self.das_value,
                 self.arr_value,
                 self.soft_drop_speed,
+                self.level,
                 selected_option,
                 self.current_input,
             )
@@ -120,25 +118,21 @@ class TetrisApp:
                     in_settings = False
                 elif event.type == py.KEYDOWN:
                     if event.key == py.K_ESCAPE:
-                        # Khôi phục giá trị gốc nếu người dùng không nhấn Enter để lưu
-                        self.das_value, self.arr_value, self.soft_drop_speed = (
+                        self.das_value, self.arr_value, self.soft_drop_speed, self.level = (
                             original_values
                         )
                         in_settings = False
                     elif event.key == py.K_DOWN:
-                        # Khôi phục giá trị cũ khi di chuyển sang trường khác nếu chưa nhấn Enter
                         if self.current_input:
-                            self.current_input = ""  # Reset giá trị nhập
-                        selected_option = (selected_option + 1) % 3
+                            self.current_input = "" 
+                        selected_option = (selected_option + 1) % 4  # Cycle through 4 options
                     elif event.key == py.K_UP:
-                        # Khôi phục giá trị cũ khi di chuyển sang trường khác nếu chưa nhấn Enter
                         if self.current_input:
-                            self.current_input = ""  # Reset giá trị nhập
-                        selected_option = (selected_option - 1) % 3
+                            self.current_input = "" 
+                        selected_option = (selected_option - 1) % 4  # Cycle through 4 options
                     elif event.key == py.K_BACKSPACE:
                         self.current_input = self.current_input[:-1]
                     elif event.key == py.K_RETURN:
-                        # Chỉ lưu giá trị khi nhấn Enter
                         if self.current_input.isdigit():
                             value = int(self.current_input)
                             if selected_option == 0:
@@ -147,29 +141,31 @@ class TetrisApp:
                                 self.arr_value = value
                             elif selected_option == 2:
                                 self.soft_drop_speed = value
-                            # Cập nhật giá trị gốc với giá trị mới sau khi lưu
+                            elif selected_option == 3:  # Handle "Level" adjustment
+                                if 1 <= value <= 15:  # Ensure the level is within bounds
+                                    self.level = value
                             original_values = [
                                 self.das_value,
                                 self.arr_value,
                                 self.soft_drop_speed,
+                                self.level,
                             ]
-                        self.current_input = ""  # Reset đầu vào sau khi nhập
+                        self.current_input = ""
                     else:
                         if event.unicode.isdigit():
                             self.current_input += event.unicode
                 elif event.type == py.MOUSEBUTTONDOWN:
                     if self.ui.save_button.collidepoint(event.pos):
-                        # Cập nhật giá trị trong game và quay lại màn hình chính
                         self.game.update_settings(
-                            self.das_value, self.arr_value, self.soft_drop_speed
+                            self.das_value, self.arr_value, self.soft_drop_speed, self.level
                         )
                         in_settings = False
                     elif self.ui.back_button.collidepoint(event.pos):
-                        # Khôi phục giá trị gốc nếu người dùng không nhấn Enter để lưu
-                        self.das_value, self.arr_value, self.soft_drop_speed = (
+                        self.das_value, self.arr_value, self.soft_drop_speed, self.level = (
                             original_values
                         )
                         in_settings = False
+
 
     def check_game_over(self):
         if self.game.game_over:
@@ -177,6 +173,7 @@ class TetrisApp:
 
     def reset_game(self):
         self.game = Game()
+        self.game.update_settings(self.das_value, self.arr_value, self.soft_drop_speed, self.level)
         self.ui = TetrisUI(self.game)
         self.service = TetrisService(self.game, self.ui)
         self.game_over = False
