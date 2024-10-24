@@ -1,9 +1,10 @@
 import pygame as py
 from constants.tetris_constants import BACKGROUND_COLOR
+from core.game_logic import Game
 
 
 class TetrisUI:
-    def __init__(self, game):
+    def __init__(self, game: Game):
         self.title_font = py.font.Font(None, 40)
         self.large_font = py.font.Font(None, 80)
 
@@ -12,11 +13,15 @@ class TetrisUI:
         self.lines_clear_surf = self.title_font.render(
             "Lines Clear", True, (255, 255, 255)
         )
+
+        self.score_surf = self.title_font.render("Score", True, (255, 255, 255))
+        self.score_rect = py.Rect(10, 270, 170, 170)
+
         self.lines_clear_rect = py.Rect(520, 55, 170, 60)
         self.next_surf = self.title_font.render("Next", True, (255, 255, 255))
         self.next_rect = py.Rect(520, 165, 170, 485)
 
-        py.display.set_caption("Tetris")
+        py.display.set_caption("Tetris v1.0.0")
         self.screen = py.display.set_mode((700, 700))
 
         self.countdown_surf = py.Surface((300, 600)).convert_alpha()
@@ -63,6 +68,20 @@ class TetrisUI:
         )
         py.draw.rect(self.draw_surf, "#aa77d1", self.hold_rect, 0, 10)
         self.game.draw_hold_tetromino(self.draw_surf)
+
+        # Hold section
+        self.screen.blit(
+            self.score_surf,
+            self.score_surf.get_rect(
+                centerx=self.score_rect.centerx,
+                centery=self.score_rect.centery
+                - self.score_rect.size[1] / 2
+                - self.score_surf.get_height() / 2,
+            ),
+        )
+
+        py.draw.rect(self.draw_surf, "#aa77d1", self.score_rect, 0, 10)
+        self.game.lock_tetromino_and_update(self.draw_surf)
 
         # Lines cleared section
         self.screen.blit(
