@@ -9,6 +9,7 @@ class TetrisService:
     def __init__(self, game, ui):
         self.game = game
         self.ui = ui
+        self.game_paused = False
         self.ev_game_update_running = True
         self.game_das_active = False
         self.key_hold_start_time = 0
@@ -27,7 +28,7 @@ class TetrisService:
     def handle_events(self):
         keys = py.key.get_pressed()
         for ev in py.event.get():
-            if ev.type == py.QUIT or self.game.game_over:
+            if ev.type == py.QUIT:
                 py.quit()
                 exit()
             elif ev.type == py.KEYDOWN:
@@ -66,6 +67,8 @@ class TetrisService:
             self.is_touching_ground()
         elif ev.key == py.K_SPACE:
             self.perform_hard_drop()
+        elif ev.key == py.K_ESCAPE:
+            self.game_paused = True
 
     def handle_keyup(self, ev):
         keys = py.key.get_pressed()
