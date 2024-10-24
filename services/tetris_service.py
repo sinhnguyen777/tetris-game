@@ -44,9 +44,9 @@ class TetrisService:
                 self.handle_deactive_lockdelay()
             elif self.game_das_active and ev.type == GAME_ARR:
                 if keys[py.K_LEFT] and self.last_direction_pressed == py.K_LEFT:
-                    self.move_tetromino_left()
+                    self.move_tetromino(py.K_LEFT)
                 elif keys[py.K_RIGHT] and self.last_direction_pressed == py.K_RIGHT:
-                    self.move_tetromino_right()
+                    self.move_tetromino(py.K_RIGHT)
 
         # Handle DAS and ARR for tetromino movement
         self.handle_das()
