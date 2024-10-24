@@ -69,7 +69,7 @@ class TetrisUI:
         py.draw.rect(self.draw_surf, "#aa77d1", self.hold_rect, 0, 10)
         self.game.draw_hold_tetromino(self.draw_surf)
 
-        # Hold section
+        # Score section
         self.screen.blit(
             self.score_surf,
             self.score_surf.get_rect(
@@ -81,11 +81,9 @@ class TetrisUI:
         )
 
         py.draw.rect(self.draw_surf, "#aa77d1", self.score_rect, 0, 10)
-
         score_value = self.title_font.render(
             str(self.game.score), True, (255, 255, 255)
         )
-
         self.screen.blit(
             score_value,
             score_value.get_rect(

@@ -185,7 +185,6 @@ class Game:
         self.line_clears += rows_cleared
 
         self.update_score(rows_cleared)
-
         return rows_cleared
 
     def tetromino_inside(self, tetromino):
@@ -299,4 +298,6 @@ class Game:
             self.score += 300
         elif rows_cleared == 3:
             self.score += 500
+        elif rows_cleared == 4:
+            self.score += 800
         print(f"Score: {self.score}")
