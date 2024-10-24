@@ -28,7 +28,7 @@ class TetrisService:
     def handle_events(self):
         keys = py.key.get_pressed()
         for ev in py.event.get():
-            if ev.type == py.QUIT or self.game.game_over:
+            if ev.type == py.QUIT:
                 py.quit()
                 exit()
             elif ev.type == py.KEYDOWN:
