@@ -81,6 +81,8 @@ class TetrisApp:
             elif event.type == py.MOUSEBUTTONDOWN:
                 if self.ui.restart_button.collidepoint(event.pos):
                     self.reset_game()
+                    self.is_countdown = True
+                    py.time.set_timer(COUNTDOWN_TIMER, 1000)
                 elif self.ui.exit_button.collidepoint(event.pos):
                     self.running = False
 
